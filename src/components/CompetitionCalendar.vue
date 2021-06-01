@@ -2,8 +2,8 @@
   <div class="matches container">
     <div class="match" v-for="match in competitionCalendar" :key="match.id">
       <div class="match__teams">
-        <span class="match__team-one">{{ match.homeTeam.name }}</span>
-        <span class="match__team-two">{{ match.awayTeam.name }}</span>
+        <span class="match__team-one match__team-one match__team" :class="{'match__team--winner': winnerHomeTeam(match)}">{{ match.homeTeam.name }}</span>
+        <span class="match__team-two match__team" :class="{'match__team--winner': winnerAwayTeam(match)}">{{ match.awayTeam.name }}</span>
       </div>
       <div class="match__details">
         <div class="match__results">
@@ -49,6 +49,12 @@ export default {
       const resp = await getCompetitionCalendarAPI(competitionId, dayjs(this.dates[0]).format('YYYY-MM-DD') , dayjs(this.dates[1]).format('YYYY-MM-DD'), this.season);
 
       this.competitionCalendar = resp.data.matches;
+    },
+    winnerAwayTeam(match) {
+      return match.score.fullTime.awayTeam > match.score.fullTime.homeTeam
+    },
+    winnerHomeTeam(match) {
+      return match.score.fullTime.homeTeam > match.score.fullTime.awayTeam
     },
   },
   created() {
